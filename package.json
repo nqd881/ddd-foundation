@@ -1,0 +1,30 @@
+{
+  "name": "ddd-foundation",
+  "version": "1.0.0",
+  "description": "A lib provide base classes for DDD",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nqd881/ddd-foundation"
+  },
+  "author": "QuocDai",
+  "license": "ISC",
+  "keywords": [
+    "ddd",
+    "ddd-base",
+    "ddd-core",
+    "ddd-foundation"
+  ],
+  "dependencies": {
+    "@types/lodash": "^4.14.196",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "tsc-alias": "^1.8.7",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.1.6"
+  }
+}
