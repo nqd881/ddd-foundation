@@ -32,8 +32,7 @@
     "paths": {
       "#core/*": ["src/core/*"],
       "#types/*": ["src/types/*"],
-      "#utils/*": ["src/utils/*"],
-      "#decorators/*": ["src/decorators/*"]
+      "#common/*": ["src/common/*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
@@ -83,7 +82,7 @@
     /* Type Checking */
     "strict": true /* Enable all strict type-checking options. */,
     // "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
-    // "strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
+    "strictNullChecks": false /* When type checking, take into account 'null' and 'undefined'. */,
     // "strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
     // "strictBindCallApply": true,                      /* Check that the arguments for 'bind', 'call', and 'apply' methods match the original function. */
     "strictPropertyInitialization": false /* Check for class properties that are declared but not set in the constructor. */,

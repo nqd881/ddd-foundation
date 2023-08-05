@@ -1,18 +1,56 @@
-import { Type } from "#types/type";
-import _ from "lodash";
+import { Type } from '#types/type';
+import _ from 'lodash';
 
-export type EntityUpdater = () => void;
+export type EntityUpdateFn = () => void;
+
+export type EntityUpdateResult<T extends AnyEntity = AnyEntity> = {
+  beforeProps: GetEntityProps<T>;
+  afterProps: GetEntityProps<T>;
+};
+
+export class EntityUpdater<T extends AnyEntity = AnyEntity> {
+  entity: T;
+  updateFn: EntityUpdateFn;
+  result: EntityUpdateResult<T>;
+  executed: boolean;
+
+  constructor(entity: T, updateFn: EntityUpdateFn) {
+    this.entity = entity;
+    this.updateFn = updateFn;
+    this.result = {
+      beforeProps: null,
+      afterProps: null,
+    };
+    this.executed = false;
+  }
+
+  update() {
+    if (this.executed) return;
+
+    this.result.beforeProps = this.entity.getProps();
+
+    this.updateFn();
+
+    this.result.afterProps = this.entity.getProps();
+
+    this.executed = true;
+
+    return this.result;
+  }
+}
 
 export abstract class EntityBase<P> {
   protected readonly _id: string;
   protected _props: P;
-  protected _marked: boolean = false;
+  protected _marked: boolean;
+  protected _updaters: EntityUpdater[];
 
   constructor(id: string, props: P) {
-    if (!id) throw new Error("Id must be provided");
+    if (!id) throw new Error('Id must be provided');
 
     this._id = id;
-
+    this._marked = false;
+    this._updaters = [];
     this.setProps(props);
   }
 
@@ -24,6 +62,10 @@ export abstract class EntityBase<P> {
 
   get id() {
     return this._id;
+  }
+
+  get updaters() {
+    return this._updaters;
   }
 
   private setProps(props: P) {
@@ -44,12 +86,18 @@ export abstract class EntityBase<P> {
     this._marked = false;
   }
 
-  protected update(updater: EntityUpdater) {
-    updater();
+  protected update(updateFn: EntityUpdateFn) {
+    const updater = new EntityUpdater(this, updateFn);
+
+    const result = updater.update();
 
     this.validateProps(this._props);
 
+    this._updaters.push(updater);
+
     this.mark();
+
+    return result;
   }
 
   hasChanged() {
@@ -75,9 +123,7 @@ export type AnyEntity = EntityBase<any>;
 
 export type TypeEntity<T extends AnyEntity = AnyEntity> = Type<T>;
 
-export type GetEntityProps<T extends AnyEntity> = T extends EntityBase<infer P>
-  ? P
-  : any;
+export type GetEntityProps<T extends AnyEntity> = T extends EntityBase<infer P> ? P : any;
 
 export type EntityConstructor<T extends AnyEntity = AnyEntity> = new (
   ...args: ConstructorParameters<typeof EntityBase<GetEntityProps<T>>>
