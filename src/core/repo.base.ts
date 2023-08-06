@@ -1,5 +1,5 @@
-import { MaybePromise } from "#types/maybe-promise";
-import { AnyAggregate } from "./aggregate.base";
+import { MaybePromise } from '#types/maybe-promise';
+import { AnyAggregate } from './aggregate.base';
 
 export interface IRepoBase<AR extends AnyAggregate> {
   findById(id: string): MaybePromise<AR>;

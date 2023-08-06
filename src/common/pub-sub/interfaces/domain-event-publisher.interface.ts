@@ -1,5 +1,5 @@
-import { AnyDomainEvent } from "#core/domain-event.base";
-import { IDomainEventSubscriber } from "./domain-event-subscriber.interface";
+import { AnyDomainEvent } from '#core/domain-event.base';
+import { IDomainEventSubscriber } from './domain-event-subscriber.interface';
 
 export interface IDomainEventPublisher {
   removeSubscriber(subscriber: IDomainEventSubscriber): void;

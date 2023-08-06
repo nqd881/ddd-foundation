@@ -1,4 +1,4 @@
-import { AnyDomainEvent } from "#core/domain-event.base";
+import { AnyDomainEvent } from '#core/domain-event.base';
 
 export interface IDomainEventSubscriber {
   subscribedEventName: string;

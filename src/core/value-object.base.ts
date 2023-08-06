@@ -1,6 +1,6 @@
-import { Constructor } from "#types/constructor";
-import { Type } from "#types/type";
-import _ from "lodash";
+import { Constructor } from '#types/constructor';
+import { Type } from '#types/type';
+import _ from 'lodash';
 
 export abstract class ValueObjectBase<P> {
   protected readonly props: Readonly<P>;
@@ -33,7 +33,7 @@ export abstract class ValueObjectBase<P> {
     const clonedProps = _.cloneDeep(this.props);
 
     return new (this.constructor as Constructor<ValueObjectBase<P>>)(
-      _.merge(clonedProps, props)
+      _.merge(clonedProps, props),
     ) as this;
   }
 
@@ -44,15 +44,12 @@ export abstract class ValueObjectBase<P> {
 
 export type AnyValueObject = ValueObjectBase<any>;
 
-export type TypeValueObject<T extends AnyValueObject = AnyValueObject> =
-  Type<T>;
+export type TypeValueObject<T extends AnyValueObject = AnyValueObject> = Type<T>;
 
-export type GetValueObjectProps<T extends AnyValueObject> =
-  T extends ValueObjectBase<infer P> ? P : any;
+export type GetValueObjectProps<T extends AnyValueObject> = T extends ValueObjectBase<infer P>
+  ? P
+  : any;
 
-export type ValueObjectConstructor<T extends AnyValueObject = AnyValueObject> =
-  new (
-    ...args: ConstructorParameters<
-      typeof ValueObjectBase<GetValueObjectProps<T>>
-    >
-  ) => T;
+export type ValueObjectConstructor<T extends AnyValueObject = AnyValueObject> = new (
+  ...args: ConstructorParameters<typeof ValueObjectBase<GetValueObjectProps<T>>>
+) => T;

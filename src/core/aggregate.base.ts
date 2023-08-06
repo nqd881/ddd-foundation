@@ -1,6 +1,6 @@
-import { Type } from "#types/type";
-import { AnyDomainEvent } from "./domain-event.base";
-import { EntityBase, GetEntityProps } from "./entity.base";
+import { Type } from '#types/type';
+import { AnyDomainEvent } from './domain-event.base';
+import { EntityBase, GetEntityProps } from './entity.base';
 
 export abstract class AggregateBase<P> extends EntityBase<P> {
   protected _originalVersion: number;
@@ -12,8 +12,7 @@ export abstract class AggregateBase<P> extends EntityBase<P> {
   constructor(id: string, props: P, originalVersion: number, loaded: boolean) {
     super(id, props);
 
-    if (originalVersion < 0)
-      throw new Error("Version must be set with non-negative number");
+    if (originalVersion < 0) throw new Error('Version must be set with non-negative number');
 
     this._originalVersion = originalVersion;
     this._events = [];

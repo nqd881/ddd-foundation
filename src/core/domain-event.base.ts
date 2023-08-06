@@ -1,4 +1,4 @@
-import { Type } from "#types/type";
+import { Type } from '#types/type';
 
 export interface DomainEventMetadata {
   name: string;
@@ -6,7 +6,7 @@ export interface DomainEventMetadata {
   timestamp: number;
 }
 
-export type DomainEventProps<E extends AnyDomainEvent> = Omit<E, "metadata">;
+export type DomainEventProps<E extends AnyDomainEvent> = Omit<E, 'metadata'>;
 
 export class DomainEventBase<P> {
   public readonly metadata: Readonly<DomainEventMetadata>;
@@ -20,15 +20,11 @@ export class DomainEventBase<P> {
 
 export type AnyDomainEvent = DomainEventBase<any>;
 
-export type TypeDomainEvent<T extends AnyDomainEvent = AnyDomainEvent> =
-  Type<T>;
+export type TypeDomainEvent<T extends AnyDomainEvent = AnyDomainEvent> = Type<T>;
 
 export type GetDomainEventProps<T extends AnyDomainEvent = AnyDomainEvent> =
   T extends DomainEventBase<infer P> ? P : any;
 
-export type DomainEventConstructor<T extends AnyDomainEvent = AnyDomainEvent> =
-  new (
-    ...args: ConstructorParameters<
-      typeof DomainEventBase<GetDomainEventProps<T>>
-    >
-  ) => T;
+export type DomainEventConstructor<T extends AnyDomainEvent = AnyDomainEvent> = new (
+  ...args: ConstructorParameters<typeof DomainEventBase<GetDomainEventProps<T>>>
+) => T;

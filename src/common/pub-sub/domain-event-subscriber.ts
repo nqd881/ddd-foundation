@@ -1,17 +1,13 @@
-import { AnyDomainEvent } from "#core/domain-event.base";
-import { MaybePromise } from "#types/maybe-promise";
-import { Type } from "#types/type";
-// import { v4 } from "uuid";
-import { DomainEventPublisher } from "./domain-event-publisher";
-import { IDomainEventSubscriber } from "./interfaces/domain-event-subscriber.interface";
+import { AnyDomainEvent } from '#core/domain-event.base';
+import { MaybePromise } from '#types/maybe-promise';
+import { Type } from '#types/type';
+import { DomainEventPublisher } from './domain-event-publisher';
+import { IDomainEventSubscriber } from './interfaces/domain-event-subscriber.interface';
 
-export type DomainEventHandler<E extends AnyDomainEvent> = (
-  event: E
-) => MaybePromise<void>;
+export type DomainEventHandler<E extends AnyDomainEvent> = (event: E) => MaybePromise<void>;
 
-export abstract class DomainEventSubscriber<
-  E extends AnyDomainEvent = AnyDomainEvent
-> implements IDomainEventSubscriber
+export abstract class DomainEventSubscriber<E extends AnyDomainEvent = AnyDomainEvent>
+  implements IDomainEventSubscriber
 {
   public readonly subscribedEventName: string;
 
@@ -32,6 +28,6 @@ export abstract class DomainEventSubscriber<
 
 export type AnyDomainEventSubscriber = DomainEventSubscriber;
 
-export type TypeDomainEventSubscriber<
-  T extends AnyDomainEvent = AnyDomainEvent
-> = Type<DomainEventSubscriber<T>>;
+export type TypeDomainEventSubscriber<T extends AnyDomainEvent = AnyDomainEvent> = Type<
+  DomainEventSubscriber<T>
+>;

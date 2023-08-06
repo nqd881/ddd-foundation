@@ -1,10 +1,7 @@
-import { AnyAggregate } from "#core/aggregate.base";
-import { AnyDomainEvent } from "#core/domain-event.base";
-import {
-  AnyDomainEventSubscriber,
-  DomainEventSubscriber,
-} from "./domain-event-subscriber";
-import { IDomainEventPublisher } from "./interfaces/domain-event-publisher.interface";
+import { AnyAggregate } from '#core/aggregate.base';
+import { AnyDomainEvent } from '#core/domain-event.base';
+import { AnyDomainEventSubscriber, DomainEventSubscriber } from './domain-event-subscriber';
+import { IDomainEventPublisher } from './interfaces/domain-event-publisher.interface';
 
 export class DomainEventPublisher implements IDomainEventPublisher {
   private static _subscribers: AnyDomainEventSubscriber[];
@@ -15,18 +12,14 @@ export class DomainEventPublisher implements IDomainEventPublisher {
     return new DomainEventPublisher();
   }
 
-  removeSubscriber<E extends AnyDomainEvent>(
-    subscriber: DomainEventSubscriber<E>
-  ) {
-    DomainEventPublisher._subscribers =
-      DomainEventPublisher._subscribers.filter(
-        (_subscriber) => _subscriber === subscriber
-      );
+  removeSubscriber<E extends AnyDomainEvent>(subscriber: DomainEventSubscriber<E>) {
+    DomainEventPublisher._subscribers = DomainEventPublisher._subscribers.filter(
+      (_subscriber) => _subscriber === subscriber,
+    );
   }
 
   subscribe<E extends AnyDomainEvent>(subscriber: DomainEventSubscriber<E>) {
-    if (!DomainEventPublisher._subscribers)
-      DomainEventPublisher._subscribers = [];
+    if (!DomainEventPublisher._subscribers) DomainEventPublisher._subscribers = [];
 
     DomainEventPublisher._subscribers.push(subscriber);
   }
