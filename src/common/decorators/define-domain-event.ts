@@ -1,5 +1,5 @@
 import { AnyDomainEvent } from '#core/domain-event.base';
-import { DomainEventClass } from '../core-wrapper';
+import { DomainEventClass } from '../core-wrappers';
 import { ImplementStatic } from './implement-static';
 
 export function DefineDomainEvent<T extends AnyDomainEvent>() {
