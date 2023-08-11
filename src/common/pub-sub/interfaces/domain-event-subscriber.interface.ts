@@ -1,6 +1,6 @@
 import { AnyDomainEvent } from '#core/domain-event.base';
 
-export interface IDomainEventSubscriber {
+export interface IDomainEventSubscriber<T extends AnyDomainEvent = AnyDomainEvent> {
   subscribedEventName: string;
-  handleEvent(event: AnyDomainEvent): void;
+  handleEvent(event: T): void;
 }

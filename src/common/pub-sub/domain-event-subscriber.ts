@@ -1,7 +1,6 @@
 import { AnyDomainEvent } from '#core/domain-event.base';
 import { MaybePromise } from '#types/maybe-promise';
 import { Type } from '#types/type';
-import { DomainEventPublisher } from './domain-event-publisher';
 import { IDomainEventSubscriber } from './interfaces/domain-event-subscriber.interface';
 
 export type DomainEventHandler<E extends AnyDomainEvent> = (event: E) => MaybePromise<void>;
@@ -13,8 +12,6 @@ export abstract class DomainEventSubscriber<E extends AnyDomainEvent = AnyDomain
 
   constructor(subscribedEventName: string) {
     this.subscribedEventName = subscribedEventName;
-
-    DomainEventPublisher.instance().subscribe(this);
   }
 
   abstract handle(event: E): MaybePromise<void>;
