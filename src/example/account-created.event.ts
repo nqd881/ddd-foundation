@@ -1,4 +1,4 @@
-import { DomainEvent, DomainEventBuilder } from '../common';
+import { DomainEvent } from '../common';
 import { AggregateTypes } from './constants';
 
 export type AccountCreatedEventProps = {
@@ -10,5 +10,3 @@ export class AccountCreatedEvent extends DomainEvent<AccountCreatedEventProps>(
   AggregateTypes.Account,
   'account.created',
 ) {}
-
-export const AccountCreatedEventBuilder = new DomainEventBuilder(AccountCreatedEvent);

@@ -1,18 +1,19 @@
 import { EnumerationClass } from '#common/types/enumeration.type';
 import { AnyEnumeration, GetEnumerationValue } from '#core/enumeration.base';
 
-export class EnumerationBuilder<T extends AnyEnumeration> {
-  constructor(private enumerationClass: EnumerationClass<T>) {}
-
-  parse(value: GetEnumerationValue<T>) {
-    return this.all().find((instance) => instance.value === value);
+export class EnumerationBuilder {
+  static parse<T extends AnyEnumeration>(
+    enumerationClass: EnumerationClass<T>,
+    value: GetEnumerationValue<T>,
+  ) {
+    return this.all(enumerationClass).find((instance) => instance.value === value);
   }
 
-  all(): T[] {
-    const properties = Object.keys(this.enumerationClass);
+  static all<T extends AnyEnumeration>(enumerationClass: EnumerationClass<T>): T[] {
+    const properties = Object.keys(enumerationClass);
 
     return properties
-      .map((name) => (this.enumerationClass as any)[name])
-      .filter((value) => value instanceof this.enumerationClass) as T[];
+      .map((name) => (enumerationClass as any)[name])
+      .filter((value) => value instanceof enumerationClass) as T[];
   }
 }
