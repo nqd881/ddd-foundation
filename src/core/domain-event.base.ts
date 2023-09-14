@@ -1,30 +1,39 @@
-import { Type } from '#types/type';
-
 export interface DomainEventMetadata {
-  name: string;
-  id: string;
-  timestamp: number;
+  eventType: string;
+  aggregateType: string;
 }
-
-export type DomainEventProps<E extends AnyDomainEvent> = Omit<E, 'metadata'>;
 
 export class DomainEventBase<P> {
   public readonly metadata: Readonly<DomainEventMetadata>;
+  public readonly id: string;
+  public readonly aggregateId: string;
+  public readonly timestamp: number;
   public readonly props: Readonly<P>;
 
-  constructor(metadata: DomainEventMetadata, props: P) {
+  constructor(
+    metadata: DomainEventMetadata,
+    id: string,
+    aggregateId: string,
+    timestamp: number,
+    props: P,
+  ) {
     this.metadata = metadata;
+    this.id = id;
+    this.aggregateId = aggregateId;
+    this.timestamp = timestamp;
     this.props = props;
   }
 }
 
 export type AnyDomainEvent = DomainEventBase<any>;
 
-export type TypeDomainEvent<T extends AnyDomainEvent = AnyDomainEvent> = Type<T>;
+export type GetDomainEventProps<T extends AnyDomainEvent> = T extends DomainEventBase<infer P>
+  ? P
+  : never;
 
-export type GetDomainEventProps<T extends AnyDomainEvent = AnyDomainEvent> =
-  T extends DomainEventBase<infer P> ? P : any;
+export type DomainEventBaseConstructorParamsWithProps<Props> = ConstructorParameters<
+  typeof DomainEventBase<Props>
+>;
 
-export type DomainEventConstructor<T extends AnyDomainEvent = AnyDomainEvent> = new (
-  ...args: ConstructorParameters<typeof DomainEventBase<GetDomainEventProps<T>>>
-) => T;
+export type DomainEventBaseConstructorParams<T extends AnyDomainEvent> =
+  DomainEventBaseConstructorParamsWithProps<GetDomainEventProps<T>>;

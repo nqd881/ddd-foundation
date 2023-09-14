@@ -1,4 +1,3 @@
-import { Type } from '#types/type';
 import { AnyDomainEvent } from './domain-event.base';
 import { EntityBase, GetEntityProps } from './entity.base';
 
@@ -9,8 +8,8 @@ export abstract class AggregateBase<P> extends EntityBase<P> {
   // loaded from repo or new instance
   protected _loaded: boolean;
 
-  constructor(id: string, props: P, originalVersion: number, loaded: boolean) {
-    super(id, props);
+  constructor(type: string, id: string, props: P, originalVersion: number, loaded: boolean) {
+    super(type, id, props);
 
     if (originalVersion < 0) throw new Error('Version must be set with non-negative number');
 
@@ -23,24 +22,16 @@ export abstract class AggregateBase<P> extends EntityBase<P> {
     }
   }
 
-  static isAggregate(obj: any): obj is AnyAggregate {
+  static isAggregate(obj: object): obj is AnyAggregate {
     return obj instanceof AggregateBase;
   }
 
   hasUnpublishedEvents() {
-    return Boolean(this.unpublishedEvents.length);
-  }
-
-  publishEvents() {
-    const events = this.unpublishedEvents.slice();
-
-    this.clearEvents();
-
-    return events;
+    return Boolean(this.events.length);
   }
 
   protected recordEvent(event: AnyDomainEvent) {
-    if (!this.isNew()) this._events.push(event);
+    this._events.push(event);
   }
 
   clearEvents() {
@@ -52,7 +43,7 @@ export abstract class AggregateBase<P> extends EntityBase<P> {
     return this._originalVersion === 0 && !this._loaded;
   }
 
-  get unpublishedEvents() {
+  get events() {
     return this._events;
   }
 
@@ -73,8 +64,19 @@ export abstract class AggregateBase<P> extends EntityBase<P> {
 
 export type AnyAggregate = AggregateBase<any>;
 
-export type TypeAggregate<T extends AnyAggregate = AnyAggregate> = Type<T>;
+export type AggregateBaseConstructorParamsWithProps<P> = ConstructorParameters<
+  typeof AggregateBase<P>
+>;
 
-export type AggregateConstructor<T extends AnyAggregate = AnyAggregate> = new (
-  ...args: ConstructorParameters<typeof AggregateBase<GetEntityProps<T>>>
-) => T;
+export type AggregateBaseConstructorParams<T extends AnyAggregate> =
+  AggregateBaseConstructorParamsWithProps<GetEntityProps<T>>;
+
+// export type AggregateBaseClassWithProps<Props> = Class<
+//   AggregateBase<Props>,
+//   AggregateBaseConstructorParamsWithProps<Props>
+// >;
+
+// export type AggregateBaseClass<T extends AnyAggregate> = Class<
+//   T,
+//   AggregateBaseConstructorParams<T>
+// >;

@@ -1,14 +1,15 @@
-import { Constructor } from '#types/constructor';
-import { Type } from '#types/type';
 import _ from 'lodash';
+import { Constructor } from 'type-fest';
 
 export abstract class ValueObjectBase<P> {
-  protected readonly props: Readonly<P>;
+  private readonly _type: string;
+  protected readonly _props: Readonly<P>;
 
-  constructor(props: P) {
+  constructor(type: string, props: P) {
     this.validateProps(props);
 
-    this.props = props;
+    this._type = type;
+    this._props = props;
   }
 
   static isValueObject(obj: any) {
@@ -18,7 +19,8 @@ export abstract class ValueObjectBase<P> {
   abstract validateProps(props: P): void;
 
   equalsType(obj: ValueObjectBase<P>) {
-    return obj instanceof this.constructor;
+    // return obj instanceof this.constructor;
+    return this.type === obj.type;
   }
 
   equals(obj: ValueObjectBase<P>) {
@@ -40,16 +42,25 @@ export abstract class ValueObjectBase<P> {
   clone() {
     return this.cloneWith({});
   }
+
+  get type() {
+    return this._type;
+  }
+
+  get props() {
+    return this._props;
+  }
 }
 
 export type AnyValueObject = ValueObjectBase<any>;
 
-export type TypeValueObject<T extends AnyValueObject = AnyValueObject> = Type<T>;
-
-export type GetValueObjectProps<T extends AnyValueObject> = T extends ValueObjectBase<infer P>
-  ? P
+export type GetValueObjectProps<T extends AnyValueObject> = T extends ValueObjectBase<infer Props>
+  ? Props
   : any;
 
-export type ValueObjectConstructor<T extends AnyValueObject = AnyValueObject> = new (
-  ...args: ConstructorParameters<typeof ValueObjectBase<GetValueObjectProps<T>>>
-) => T;
+export type ValueObjectBaseConstructorParamsWithProps<Props> = ConstructorParameters<
+  typeof ValueObjectBase<Props>
+>;
+
+export type ValueObjectBaseConstructorParams<T extends AnyValueObject> =
+  ValueObjectBaseConstructorParamsWithProps<GetValueObjectProps<T>>;

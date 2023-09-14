@@ -1,12 +1,14 @@
-import { MaybePromise } from '#types/maybe-promise';
+import { Promisable } from 'type-fest';
 import { AnyAggregate } from './aggregate.base';
 
 export interface IRepoBase<AR extends AnyAggregate> {
-  findById(id: string): MaybePromise<AR>;
+  findById(id: string): Promisable<AR>;
 
-  create(aggregates: AR | AR[]): MaybePromise<any>;
+  create(aggregates: AR | AR[]): Promisable<any>;
 
-  updateOne(aggregate: AR): MaybePromise<any>;
+  updateOne(aggregate: AR): Promisable<any>;
 
-  save(aggregate: AR): MaybePromise<any>;
+  save(aggregate: AR): Promisable<any>;
+
+  delete(aggregateId: string): Promisable<any>;
 }
