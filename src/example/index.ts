@@ -1,11 +1,17 @@
 import { EnumerationBuilder } from '../common';
 import { Account } from './account';
 import { AccountStatus } from './account-status';
+import { Password } from './password';
 
 const account = Account.create({
   username: 'quocdaitinls',
-  password: '123123',
+  password: new Password({
+    value: '123123',
+    hashed: false,
+  }),
 });
+
+console.log(Account.AggregateType);
 
 console.log(account);
 
