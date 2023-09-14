@@ -1,3 +1,3 @@
-export enum AggregateTypes {
+export enum Aggregates {
   Account = 'Account',
 }

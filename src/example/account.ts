@@ -1,7 +1,7 @@
 import { Aggregate, AggregateBuilder, DomainEventBuilder } from '../common';
 import { AccountCreatedEvent } from './account-created.event';
 import { AccountStatus } from './account-status';
-import { AggregateTypes } from './constants';
+import { Aggregates } from './constants';
 import { Password } from './password';
 
 export type AccountProps = {
@@ -12,7 +12,7 @@ export type AccountProps = {
 
 export type CreateAccountProps = Omit<AccountProps, 'status'>;
 
-export class Account extends Aggregate<AccountProps>(AggregateTypes.Account) {
+export class Account extends Aggregate<AccountProps>(Aggregates.Account) {
   validateProps(props: AccountProps): void {}
 
   static create(props: CreateAccountProps) {

@@ -11,10 +11,6 @@ export const Aggregate = <Props>(aggregateType: string): AbstractAggregateClassW
     constructor(...args: AggregateConstructorParamsWithProps<Props>) {
       super(aggregateType, ...args);
     }
-
-    get props() {
-      return this._props;
-    }
   }
 
   return A;
