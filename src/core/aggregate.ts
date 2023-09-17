@@ -29,12 +29,16 @@ export abstract class Aggregate<P> extends Entity<P> {
     return obj instanceof Aggregate;
   }
 
+  static getAggregateType<T extends AnyAggregate>(this: AggregateClass<T>): string {
+    return Reflect.getMetadata(AGGREGATE_TYPE, this) ?? this.name;
+  }
+
   static initAggregate<T extends AnyAggregate>(
     this: AggregateClass<T>,
     props: GetEntityProps<T>,
     id: string = v4(),
   ) {
-    const aggregateType = Reflect.getMetadata(AGGREGATE_TYPE, this);
+    const aggregateType = this.getAggregateType();
 
     return new this(aggregateType, id, props, 0, false);
   }
@@ -45,7 +49,7 @@ export abstract class Aggregate<P> extends Entity<P> {
     props: GetEntityProps<T>,
     version: number,
   ) {
-    const aggregateType = Reflect.getMetadata(AGGREGATE_TYPE, this);
+    const aggregateType = this.getAggregateType();
 
     return new this(aggregateType, id, props, version, true);
   }

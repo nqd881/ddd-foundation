@@ -19,6 +19,10 @@ export class Enumeration {
     this._value = value;
   }
 
+  static getEnumerationType<T extends AnyEnumeration>(this: EnumerationClass<T>) {
+    return Reflect.getMetadata(ENUMERATION_TYPE, this) ?? this.name;
+  }
+
   static newEnum<T extends AnyEnumeration>(
     this: EnumerationClass<T>,
     value: EnumerationValue,
@@ -28,7 +32,7 @@ export class Enumeration {
     let _enum: T | undefined;
     function generator(): T {
       if (!_enum) {
-        const enumerationType = Reflect.getMetadata(ENUMERATION_TYPE, enumClass);
+        const enumerationType = enumClass.getEnumerationType();
 
         _enum = new enumClass(enumerationType, value);
       }

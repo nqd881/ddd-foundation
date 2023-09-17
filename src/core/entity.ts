@@ -60,12 +60,16 @@ export abstract class Entity<P> {
     return obj instanceof Entity;
   }
 
+  static getEntityType<T extends AnyEntity>(this: EntityClass<T>) {
+    return Reflect.getMetadata(ENTITY_TYPE, this) ?? this.name;
+  }
+
   static initEntity<T extends AnyEntity>(
     this: EntityClass<T>,
     props: GetEntityProps<T>,
     id: string = v4(),
   ) {
-    const entityType = Reflect.getMetadata(ENTITY_TYPE, this);
+    const entityType = this.getEntityType();
 
     return new this(entityType, id, props);
   }

@@ -1,7 +1,7 @@
 import { DomainEventClass } from '#types/domain-event.type';
-import { DOMAIN_EVENT_METADATA } from 'src/decorators';
-import { v4 } from 'uuid';
 import 'reflect-metadata';
+import { DOMAIN_EVENT_AGGREGATE_TYPE, DOMAIN_EVENT_TYPE } from 'src/decorators';
+import { v4 } from 'uuid';
 
 export interface DomainEventMetadata {
   eventType: string;
@@ -29,13 +29,24 @@ export class DomainEvent<P> {
     this.props = props;
   }
 
+  static getDomainEventType<T extends AnyDomainEvent>(this: DomainEventClass<T>) {
+    return Reflect.getMetadata(DOMAIN_EVENT_TYPE, this) ?? this.name;
+  }
+
+  static getDomainEventAggregateType<T extends AnyDomainEvent>(this: DomainEventClass<T>) {
+    return Reflect.getMetadata(DOMAIN_EVENT_AGGREGATE_TYPE, this);
+  }
+
   static newEvent<T extends AnyDomainEvent>(
     this: DomainEventClass<T>,
     aggregateId: string,
     props: GetDomainEventProps<T>,
     id: string = v4(),
   ) {
-    const metadata = Reflect.getMetadata(DOMAIN_EVENT_METADATA, this);
+    const metadata: DomainEventMetadata = {
+      aggregateType: this.getDomainEventAggregateType(),
+      eventType: this.getDomainEventType(),
+    };
 
     return new this(metadata, id, aggregateId, Date.now(), props);
   }

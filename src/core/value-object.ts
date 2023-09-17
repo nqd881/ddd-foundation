@@ -14,11 +14,15 @@ export abstract class ValueObject<P> {
     this._props = props;
   }
 
+  static getValueObjectType<T extends AnyValueObject>(this: ValueObjectClass<T>) {
+    return Reflect.getMetadata(VALUE_OBJECT_TYPE, this) ?? this.name;
+  }
+
   static initValueObject<T extends AnyValueObject>(
     this: ValueObjectClass<T>,
     props: GetValueObjectProps<T>,
   ) {
-    const valueObjectType = Reflect.getMetadata(VALUE_OBJECT_TYPE, this);
+    const valueObjectType = this.getValueObjectType();
 
     return new this(valueObjectType, props);
   }
