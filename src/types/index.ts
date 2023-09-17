@@ -1,4 +1,3 @@
-export * from './abstractable-class';
 export * from './aggregate.type';
 export * from './domain-event.type';
 export * from './entity.type';

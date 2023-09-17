@@ -1,10 +1,12 @@
-import { ValueObject } from '../common';
+import { ValueObject } from '#core/value-object';
+import { ValueObjectType } from 'src/decorators/value-object-type';
 
 export type PasswordProps = {
   value: string;
   hashed: boolean;
 };
 
-export class Password extends ValueObject<PasswordProps>('Password') {
+@ValueObjectType()
+export class Password extends ValueObject<PasswordProps> {
   validateProps(props: PasswordProps): void {}
 }

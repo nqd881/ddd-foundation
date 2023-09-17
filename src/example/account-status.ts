@@ -1,6 +1,8 @@
-import { Enumeration } from '../common';
+import { Enumeration } from '#core/enumeration';
+import { EnumerationType } from 'src/decorators/enumeration-type';
 
-export class AccountStatus extends Enumeration<string>('AccountStatus') {
-  static ActivatePending = new AccountStatus('ActivatePending');
-  static Activated = new AccountStatus('Activated');
+@EnumerationType()
+export class AccountStatus extends Enumeration {
+  static ActivatePending = AccountStatus.newEnum('ActivatePending');
+  static Activated = AccountStatus.newEnum('Activated');
 }

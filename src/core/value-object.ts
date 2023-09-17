@@ -1,7 +1,9 @@
+import { ValueObjectClass } from '#types/value-object.type';
 import _ from 'lodash';
+import { VALUE_OBJECT_TYPE } from 'src/decorators';
 import { Constructor } from 'type-fest';
 
-export abstract class ValueObjectBase<P> {
+export abstract class ValueObject<P> {
   private readonly _type: string;
   protected readonly _props: Readonly<P>;
 
@@ -12,18 +14,27 @@ export abstract class ValueObjectBase<P> {
     this._props = props;
   }
 
+  static initValueObject<T extends AnyValueObject>(
+    this: ValueObjectClass<T>,
+    props: GetValueObjectProps<T>,
+  ) {
+    const valueObjectType = Reflect.getMetadata(VALUE_OBJECT_TYPE, this);
+
+    return new this(valueObjectType, props);
+  }
+
   static isValueObject(obj: any) {
-    return obj instanceof ValueObjectBase;
+    return obj instanceof ValueObject;
   }
 
   abstract validateProps(props: P): void;
 
-  equalsType(obj: ValueObjectBase<P>) {
+  equalsType(obj: ValueObject<P>) {
     // return obj instanceof this.constructor;
     return this.type === obj.type;
   }
 
-  equals(obj: ValueObjectBase<P>) {
+  equals(obj: ValueObject<P>) {
     if (obj === null || obj === undefined) return false;
 
     if (!this.equalsType(obj)) return false;
@@ -34,7 +45,7 @@ export abstract class ValueObjectBase<P> {
   cloneWith(props: Partial<P>) {
     const clonedProps = _.cloneDeep(this.props);
 
-    return new (this.constructor as Constructor<ValueObjectBase<P>>)(
+    return new (this.constructor as Constructor<ValueObject<P>>)(
       _.merge(clonedProps, props),
     ) as this;
   }
@@ -52,15 +63,12 @@ export abstract class ValueObjectBase<P> {
   }
 }
 
-export type AnyValueObject = ValueObjectBase<any>;
+export type AnyValueObject = ValueObject<any>;
 
-export type GetValueObjectProps<T extends AnyValueObject> = T extends ValueObjectBase<infer Props>
+export type GetValueObjectProps<T extends AnyValueObject> = T extends ValueObject<infer Props>
   ? Props
   : any;
 
-export type ValueObjectBaseConstructorParamsWithProps<Props> = ConstructorParameters<
-  typeof ValueObjectBase<Props>
+export type ValueObjectConstructorParams<T extends AnyValueObject> = ConstructorParameters<
+  typeof ValueObject<GetValueObjectProps<T>>
 >;
-
-export type ValueObjectBaseConstructorParams<T extends AnyValueObject> =
-  ValueObjectBaseConstructorParamsWithProps<GetValueObjectProps<T>>;
