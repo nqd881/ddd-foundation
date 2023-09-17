@@ -1,4 +1,8 @@
+import { EntityClass } from '#types/entity.type';
 import _ from 'lodash';
+import { ENTITY_TYPE } from 'src/decorators';
+import { v4 } from 'uuid';
+import 'reflect-metadata';
 
 export type EntityUpdateFn = () => void;
 
@@ -35,7 +39,7 @@ export class EntityUpdater<T extends AnyEntity = AnyEntity> {
   }
 }
 
-export abstract class EntityBase<P> {
+export abstract class Entity<P> {
   private readonly _type: string;
   private readonly _id: string;
   private _marked: boolean;
@@ -53,7 +57,17 @@ export abstract class EntityBase<P> {
   }
 
   static isEntity(obj: any): obj is AnyEntity {
-    return obj instanceof EntityBase;
+    return obj instanceof Entity;
+  }
+
+  static initEntity<T extends AnyEntity>(
+    this: EntityClass<T>,
+    props: GetEntityProps<T>,
+    id: string = v4(),
+  ) {
+    const entityType = Reflect.getMetadata(ENTITY_TYPE, this);
+
+    return new this(entityType, id, props);
   }
 
   abstract validateProps(props: P): void;
@@ -121,14 +135,12 @@ export abstract class EntityBase<P> {
   }
 }
 
-export type AnyEntity = EntityBase<any>;
+export type AnyEntity = Entity<any>;
 
-export type GetEntityProps<T extends AnyEntity> = T extends EntityBase<infer Props> ? Props : never;
+export type GetEntityProps<T extends AnyEntity> = T extends Entity<infer Props> ? Props : never;
 
-export type EntityBaseConstructorParamsWithProps<Props> = ConstructorParameters<
-  typeof EntityBase<Props>
->;
+export type EntityConstructorParamsWithProps<Props> = ConstructorParameters<typeof Entity<Props>>;
 
-export type EntityBaseConstructorParams<T extends AnyEntity> = EntityBaseConstructorParamsWithProps<
+export type EntityConstructorParams<T extends AnyEntity> = EntityConstructorParamsWithProps<
   GetEntityProps<T>
 >;

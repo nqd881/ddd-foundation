@@ -1,12 +1,10 @@
-import { DomainEvent } from '../common';
-import { Aggregates } from './constants';
+import { DomainEvent } from '#core/domain-event';
+import { DomainEventType } from 'src/decorators/domain-event-type';
 
 export type AccountCreatedEventProps = {
   accountId: string;
   username: string;
 };
 
-export class AccountCreatedEvent extends DomainEvent<AccountCreatedEventProps>(
-  Aggregates.Account,
-  'account.created',
-) {}
+@DomainEventType('Account')
+export class AccountCreatedEvent extends DomainEvent<AccountCreatedEventProps> {}

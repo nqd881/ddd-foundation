@@ -1,7 +1,7 @@
-import { Aggregate, AggregateBuilder, DomainEventBuilder } from '../common';
+import { Aggregate } from '#core/aggregate';
+import { AggregateType } from 'src/decorators';
 import { AccountCreatedEvent } from './account-created.event';
 import { AccountStatus } from './account-status';
-import { Aggregates } from './constants';
 import { Password } from './password';
 
 export type AccountProps = {
@@ -12,21 +12,24 @@ export type AccountProps = {
 
 export type CreateAccountProps = Omit<AccountProps, 'status'>;
 
-export class Account extends Aggregate<AccountProps>(Aggregates.Account) {
+@AggregateType()
+export class Account extends Aggregate<AccountProps> {
   validateProps(props: AccountProps): void {}
 
   static create(props: CreateAccountProps) {
-    const newAccount = AggregateBuilder.new(Account, {
+    const newAccount = this.initAggregate({
       ...props,
-      status: AccountStatus.ActivatePending,
+      status: AccountStatus.ActivatePending(),
     });
 
-    newAccount.recordEvent(
-      DomainEventBuilder.new(AccountCreatedEvent, newAccount.id, {
-        accountId: newAccount.id,
-        username: newAccount.username,
-      }),
-    );
+    const event = AccountCreatedEvent.newEvent(newAccount.id, {
+      accountId: newAccount.id,
+      username: newAccount.username,
+    });
+
+    console.log(event);
+
+    newAccount.recordEvent(event);
 
     return newAccount;
   }

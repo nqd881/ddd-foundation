@@ -1,22 +1,22 @@
-import { EnumerationBuilder } from '../common';
 import { Account } from './account';
 import { AccountStatus } from './account-status';
 import { Password } from './password';
 
 const account = Account.create({
   username: 'quocdaitinls',
-  password: new Password({
+  password: Password.initValueObject({
     value: '123123',
     hashed: false,
   }),
 });
 
-console.log(Account.AggregateType);
-
 console.log(account);
 
-console.log(EnumerationBuilder.all(AccountStatus));
+console.log(AccountStatus.ActivatePending());
 
-const status = EnumerationBuilder.parse(AccountStatus, 'ActivatePending');
+console.log(AccountStatus.allEnums());
 
-console.log(status);
+console.log(AccountStatus.parseEnum('ActivatePending'));
+
+console.log(AccountStatus.ActivatePending() === AccountStatus.ActivatePending());
+console.log(AccountStatus.ActivatePending() === AccountStatus.Activated());
